@@ -1,14 +1,4 @@
-"""
-🌸 Trang Web Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11 🌸
-Chạy file này rồi mở trình duyệt tại http://localhost:2011
-"""
-
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-import webbrowser
-import threading
-import os
-
-HTML_PAGE = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +13,7 @@ HTML_PAGE = """<!DOCTYPE html>
             min-height: 100vh;
             background:
                 linear-gradient(180deg, rgba(40, 8, 40, 0.35), rgba(40, 8, 40, 0.15) 40%, rgba(40, 8, 40, 0.45)),
-                url('/bg.jpg') center / cover no-repeat fixed;
+                url('sakura_bg_4k.jpg') center / cover no-repeat fixed;
             background-color: #c9568a;
             font-family: 'Quicksand', sans-serif;
             overflow-x: hidden;
@@ -672,57 +662,3 @@ HTML_PAGE = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-
-BG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sakura_bg_4k.jpg")
-
-
-class TeachersDayHandler(SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.path.startswith("/bg.jpg"):
-            try:
-                with open(BG_PATH, "rb") as f:
-                    data = f.read()
-                self.send_response(200)
-                self.send_header("Content-type", "image/jpeg")
-                self.send_header("Cache-Control", "max-age=86400")
-                self.end_headers()
-                self.wfile.write(data)
-            except FileNotFoundError:
-                self.send_error(404, "Thiếu file sakura_bg_4k.jpg cạnh file .py")
-            return
-        self.send_response(200)
-        self.send_header("Content-type", "text/html; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(HTML_PAGE.encode("utf-8"))
-
-    def log_message(self, format, *args):
-        print(f"  🌐 {args[0]}")
-
-
-def open_browser():
-    webbrowser.open("http://localhost:2011")
-
-
-if __name__ == "__main__":
-    PORT = 2011
-
-    print()
-    print("  🌸" + "=" * 50 + "🌸")
-    print("  🌷  CHÚC MỪNG NGÀY NHÀ GIÁO VIỆT NAM 20/11  🌷")
-    print("  🌸" + "=" * 50 + "🌸")
-    print()
-    print(f"  🚀 Server đang chạy tại: http://localhost:{PORT}")
-    print("  📌 Nhấn Ctrl+C để tắt server")
-    print()
-
-    # Tự động mở trình duyệt sau 1 giây
-    threading.Timer(1.0, open_browser).start()
-
-    server = HTTPServer(("", PORT), TeachersDayHandler)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("\n  👋 Tạm biệt! Hẹn gặp lại vào 20/11 năm sau! 🌸")
-        server.server_close()
