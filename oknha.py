@@ -1,0 +1,661 @@
+"""
+🌸 Trang Web Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11 🌸
+Chạy file này rồi mở trình duyệt tại http://localhost:2011
+"""
+
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+import webbrowser
+import threading
+
+HTML_PAGE = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11 🌸</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0a2e, #16213e, #0f3460, #533483);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== HIỆU ỨNG HOA RƠI ===== */
+        .flower-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .flower {
+            position: absolute;
+            top: -60px;
+            animation: fall linear infinite;
+            font-size: 24px;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-60px) rotate(0deg); opacity: 0.9; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0.3; }
+        }
+
+        /* ===== HIỆU ỨNG PHÁO HOA ===== */
+        .firework {
+            position: fixed;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            animation: fireworkBurst 1.5s ease-out forwards;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes fireworkBurst {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* ===== PARTICLES / SAO LẤNG ===== */
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* ===== NỘI DUNG CHÍNH ===== */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .banner {
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .date-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24, #f0932b);
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 48px rgba(255, 107, 107, 0.6); }
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            background: linear-gradient(90deg, #f7d794, #f8c291, #e77f67, #f7d794);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite, fadeInDown 2s ease-out;
+            text-shadow: none;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            color: #dfe6e9;
+            font-weight: 300;
+            margin-bottom: 40px;
+            animation: fadeInDown 2.5s ease-out;
+            font-style: italic;
+        }
+
+        /* ===== CARD TRI ÂN ===== */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px 25px;
+            width: 280px;
+            transition: all 0.4s ease;
+            animation: fadeInUp 1s ease-out;
+            animation-fill-mode: backwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.3s; }
+        .card:nth-child(2) { animation-delay: 0.6s; }
+        .card:nth-child(3) { animation-delay: 0.9s; }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.03);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #f8c291;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #dfe6e9;
+            font-weight: 300;
+        }
+
+        /* ===== THƠ / LỜI TRI ÂN ===== */
+        .poem-section {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 1.5s ease-out 1.2s backwards;
+        }
+
+        .poem-section h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #f7d794;
+            margin-bottom: 25px;
+        }
+
+        .poem-line {
+            font-size: 1.1rem;
+            line-height: 2.2;
+            color: #dfe6e9;
+            font-style: italic;
+            font-weight: 300;
+            opacity: 0;
+            animation: typeIn 0.8s ease forwards;
+        }
+
+        .poem-line:nth-child(2) { animation-delay: 1.8s; }
+        .poem-line:nth-child(3) { animation-delay: 2.4s; }
+        .poem-line:nth-child(4) { animation-delay: 3.0s; }
+        .poem-line:nth-child(5) { animation-delay: 3.6s; }
+        .poem-line:nth-child(6) { animation-delay: 4.2s; }
+        .poem-line:nth-child(7) { animation-delay: 4.8s; }
+        .poem-line:nth-child(8) { animation-delay: 5.4s; }
+
+        @keyframes typeIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ===== HEART BEAT ===== */
+        .heart-section {
+            margin: 40px 0;
+            animation: fadeInUp 2s ease-out 1.5s backwards;
+        }
+
+        .heart {
+            font-size: 4rem;
+            display: inline-block;
+            animation: heartbeat 1.2s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .heart:hover {
+            transform: scale(1.3);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+        }
+
+        .wish-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #f8c291;
+            margin-top: 15px;
+            text-shadow: 0 0 20px rgba(248, 194, 145, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.4);
+            animation: fadeInUp 2.5s ease-out 2s backwards;
+        }
+
+        .footer .emoji-row {
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .subtitle { font-size: 1.1rem; }
+            .card { width: 90%; }
+            .poem-section { padding: 25px 20px; }
+        }
+
+        /* ===== NÚT NHẠC ===== */
+        .music-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        .music-btn.playing {
+            animation: musicPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+        }
+
+        /* ===== RIBBON ===== */
+        .ribbon {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #f0932b, #f7d794, #6ab04c, #22a6b3, #be2edd, #ff6b6b);
+            background-size: 400% 100%;
+            animation: ribbonFlow 4s linear infinite;
+        }
+
+        @keyframes ribbonFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ribbon"></div>
+
+    <!-- Sao lấp lánh -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Hoa rơi -->
+    <div class="flower-container" id="flowerContainer"></div>
+
+    <!-- Nội dung chính -->
+    <div class="main-content">
+        <div class="banner">
+            <div class="date-badge">📅 20 / 11</div>
+            <h1 class="title">Chúc Mừng Ngày<br>Nhà Giáo Việt Nam</h1>
+            <p class="subtitle">🌷 Vietnamese Teachers' Day 🌷</p>
+        </div>
+
+        <!-- Cards -->
+        <div class="card-container">
+            <div class="card">
+                <span class="card-icon">📚</span>
+                <h3>Tri Ân Thầy Cô</h3>
+                <p>Cảm ơn thầy cô đã dành trọn tâm huyết, đem ánh sáng tri thức soi đường cho bao thế hệ học trò.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🌻</span>
+                <h3>Lời Chúc Tốt Đẹp</h3>
+                <p>Kính chúc quý thầy cô luôn mạnh khỏe, hạnh phúc và thành công trên con đường gieo mầm tri thức.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">💐</span>
+                <h3>Mãi Ghi Nhớ</h3>
+                <p>Dù đi đâu, về đâu, trong tim mỗi người học trò luôn mang theo hình bóng và những bài học của thầy cô.</p>
+            </div>
+        </div>
+
+        <!-- Thơ -->
+        <div class="poem-section">
+            <h2>✨ Lời Tri Ân ✨</h2>
+            <p class="poem-line">Người lái đò thầm lặng qua sông,</p>
+            <p class="poem-line">Chở bao ước mơ, chở cả tấm lòng.</p>
+            <p class="poem-line">Phấn trắng bảng đen, đời không mệt mỏi,</p>
+            <p class="poem-line">Gieo hạt yêu thương, gặt mùa thành công.</p>
+            <p class="poem-line">&nbsp;</p>
+            <p class="poem-line">Kính dâng thầy cô lòng biết ơn sâu,</p>
+            <p class="poem-line">Như cánh hoa hồng đượm sắc nhiệm mầu.</p>
+            <p class="poem-line">Ngày 20/11 — ngày tri ân đẹp nhất! 🌹</p>
+        </div>
+
+        <!-- Trái tim -->
+        <div class="heart-section">
+            <span class="heart" id="heart" onclick="createFireworks(event)">❤️</span>
+            <p class="wish-text">Yêu thương gửi đến Thầy Cô 💕</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="emoji-row">🌸🌺🌻🌷🌹🌼</div>
+            <p>✨ Happy Vietnamese Teachers' Day ✨</p>
+        </div>
+    </div>
+
+    <!-- Nút nhạc (trang trí) -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Bật/Tắt nhạc">
+        🎵
+    </button>
+
+    <div class="ribbon" style="position: fixed; bottom: 0; left: 0;"></div>
+
+    <script>
+        // ===== TẠO SAO LẤP LÁNH =====
+        function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (2 + Math.random() * 3) + 's';
+                star.style.width = (2 + Math.random() * 3) + 'px';
+                star.style.height = star.style.width;
+                container.appendChild(star);
+            }
+        }
+
+        // ===== TẠO HOA RƠI =====
+        function createFlowers() {
+            const container = document.getElementById('flowerContainer');
+            const flowers = ['🌸', '🌺', '🌷', '🌻', '🌹', '🌼', '💮', '🏵️', '✿', '❀'];
+
+            setInterval(() => {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.fontSize = (16 + Math.random() * 20) + 'px';
+                flower.style.animationDuration = (5 + Math.random() * 8) + 's';
+                flower.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(flower);
+
+                setTimeout(() => flower.remove(), 15000);
+            }, 400);
+        }
+
+        // ===== HIỆU ỨNG PHÁO HOA KHI CLICK TIM =====
+        function createFireworks(event) {
+            const colors = ['#ff6b6b', '#f0932b', '#f7d794', '#6ab04c', '#22a6b3', '#be2edd', '#ff9ff3', '#feca57'];
+            const x = event.clientX || event.touches?.[0]?.clientX || window.innerWidth / 2;
+            const y = event.clientY || event.touches?.[0]?.clientY || window.innerHeight / 2;
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+
+                const angle = (Math.PI * 2 * i) / 30;
+                const velocity = 60 + Math.random() * 100;
+                const dx = Math.cos(angle) * velocity;
+                const dy = Math.sin(angle) * velocity;
+
+                document.body.appendChild(particle);
+
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${dx}px, ${dy}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 600,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+
+                setTimeout(() => particle.remove(), 1500);
+            }
+
+            // Thêm emoji bay ra
+            const emojis = ['💖', '🌸', '✨', '🌟', '💐', '🎉'];
+            for (let i = 0; i < 8; i++) {
+                const emoji = document.createElement('div');
+                emoji.style.position = 'fixed';
+                emoji.style.left = x + 'px';
+                emoji.style.top = y + 'px';
+                emoji.style.fontSize = '24px';
+                emoji.style.pointerEvents = 'none';
+                emoji.style.zIndex = '100';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                document.body.appendChild(emoji);
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 80 + Math.random() * 120;
+
+                emoji.animate([
+                    { transform: 'translate(0, 0) scale(0.5)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist - 50}px) scale(1.2)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 500,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+
+                setTimeout(() => emoji.remove(), 1600);
+            }
+        }
+
+        // ===== NHẠC (đơn giản bằng Web Audio API) =====
+        let audioCtx = null;
+        let isPlaying = false;
+        let musicInterval = null;
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (!isPlaying) {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                playMelody();
+                btn.classList.add('playing');
+                btn.textContent = '🎶';
+                isPlaying = true;
+            } else {
+                clearInterval(musicInterval);
+                btn.classList.remove('playing');
+                btn.textContent = '🎵';
+                isPlaying = false;
+            }
+        }
+
+        function playNote(freq, startTime, duration, type = 'sine') {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.08, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        }
+
+        function playMelody() {
+            // Giai điệu đơn giản, nhẹ nhàng
+            const notes = [
+                523, 587, 659, 523, 659, 698, 659,
+                587, 523, 494, 523, 587, 523,
+                440, 494, 523, 587, 523, 494, 440,
+                392, 440, 494, 523, 587, 523
+            ];
+            let noteIndex = 0;
+
+            function playNext() {
+                if (!isPlaying || !audioCtx) return;
+                const time = audioCtx.currentTime;
+                playNote(notes[noteIndex % notes.length], time, 0.4, 'sine');
+                playNote(notes[noteIndex % notes.length] / 2, time, 0.5, 'triangle');
+                noteIndex++;
+            }
+
+            playNext();
+            musicInterval = setInterval(playNext, 500);
+        }
+
+        // ===== CLICK BẤT KỲ ĐÂU TẠO HIỆU ỨNG =====
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'heart' || e.target.id === 'musicBtn') return;
+            const sparkle = document.createElement('div');
+            sparkle.textContent = ['✨', '💫', '⭐', '🌟'][Math.floor(Math.random() * 4)];
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = e.clientX + 'px';
+            sparkle.style.top = e.clientY + 'px';
+            sparkle.style.fontSize = '24px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '100';
+            document.body.appendChild(sparkle);
+
+            sparkle.animate([
+                { transform: 'translateY(0) scale(1)', opacity: 1 },
+                { transform: 'translateY(-60px) scale(1.5)', opacity: 0 }
+            ], { duration: 800, easing: 'ease-out', fill: 'forwards' });
+
+            setTimeout(() => sparkle.remove(), 900);
+        });
+
+        // ===== KHỞI CHẠY =====
+        createStars();
+        createFlowers();
+
+        console.log('🌸 Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11! 🌸');
+    </script>
+</body>
+</html>
+"""
+
+
+class TeachersDayHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(HTML_PAGE.encode("utf-8"))
+
+    def log_message(self, format, *args):
+        print(f"  🌐 {args[0]}")
+
+
+def open_browser():
+    webbrowser.open("http://localhost:2011")
+
+
+if __name__ == "__main__":
+    PORT = 2011
+
+    print()
+    print("  🌸" + "=" * 50 + "🌸")
+    print("  🌷  CHÚC MỪNG NGÀY NHÀ GIÁO VIỆT NAM 20/11  🌷")
+    print("  🌸" + "=" * 50 + "🌸")
+    print()
+    print(f"  🚀 Server đang chạy tại: http://localhost:{PORT}")
+    print("  📌 Nhấn Ctrl+C để tắt server")
+    print()
+
+    # Tự động mở trình duyệt sau 1 giây
+    threading.Timer(1.0, open_browser).start()
+
+    server = HTTPServer(("", PORT), TeachersDayHandler)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n  👋 Tạm biệt! Hẹn gặp lại vào 20/11 năm sau! 🌸")
+        server.server_close()
