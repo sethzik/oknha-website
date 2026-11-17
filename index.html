@@ -1,170 +1,165 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11 🌸</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;600;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🌸 Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11 🌸</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kolker+Brush&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f7d794; --text:#fff; --muted:#ffe3ea;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{color-scheme:dark}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:
+    radial-gradient(ellipse at 50% 120%,rgba(255,170,190,.55),transparent 60%),
+    linear-gradient(180deg,#25103f 0%,#4a2270 28%,#9b3f86 58%,#e0728f 82%,#ffb3a7 100%);
+  background-attachment:fixed;background-color:#4a2270;
+  font-family:'Quicksand',system-ui,sans-serif;color:var(--text);
+  overflow:hidden;user-select:none;cursor:pointer;
+}
+.stars{position:fixed;inset:0;pointer-events:none}
+.star{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.2;transform:scale(.8)}to{opacity:1;transform:scale(1.3)}}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+main{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;gap:14px}
+.badge{background:linear-gradient(135deg,#ff6b6b,#ee5a24,#f0932b);padding:8px 28px;border-radius:50px;font-weight:700;letter-spacing:3px;font-size:1.2rem;box-shadow:0 8px 28px rgba(255,107,107,.45)}
+h1{font-family:'Kolker Brush',cursive;font-size:clamp(2.4rem,7.5vw,4.4rem);line-height:1.2;
+  background:linear-gradient(90deg,#f7d794,#f8c291,#e77f67,#f7d794);background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sh 3s ease-in-out infinite}
+@keyframes sh{50%{background-position:100% 0}}
+.teacher{font-family:'Kolker Brush',cursive;font-size:clamp(2rem,6.5vw,2.9rem);color:#fff;text-shadow:0 0 24px rgba(255,183,201,.9),0 2px 6px rgba(0,0,0,.25)}
+.hint{color:var(--muted);font-size:1.05rem}
 
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(ellipse at 50% 120%, rgba(255, 170, 190, 0.55), transparent 60%),
-                linear-gradient(180deg, #25103f 0%, #4a2270 28%, #9b3f86 58%, #e0728f 82%, #ffb3a7 100%);
-            background-attachment: fixed;
-            background-color: #4a2270;
-            font-family: 'Quicksand', sans-serif;
-            overflow-x: hidden;
-            color: #fff;
-        }
+.gift{font-size:clamp(5rem,22vw,8rem);line-height:1;background:none;border:0;cursor:pointer;
+  animation:bob 1.8s ease-in-out infinite;filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
+.gift:active{transform:scale(.9)}
+@keyframes bob{50%{transform:translateY(-12px) rotate(-4deg)}}
+.gift.open{animation:pop .5s ease}
+@keyframes pop{40%{transform:scale(1.25) rotate(6deg)}}
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+.wish{min-height:5.5em;max-width:560px;padding:18px 24px;border-radius:20px;
+  background:rgba(60,10,50,.38);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.18);font-size:clamp(1.05rem,3.6vw,1.35rem);line-height:1.6;
+  display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(16px);transition:.5s}
+.wish.show{opacity:1;transform:none}
+.count{font-size:.95rem;color:var(--muted)}
+.dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);transition:.3s}
+.dots i.on{background:var(--gold);box-shadow:0 0 8px var(--gold)}
 
-        /* ===== HIỆU ỨNG PHÁO HOA ===== */
-        .firework {
-            position: fixed;
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            animation: fireworkBurst 1.5s ease-out forwards;
-            pointer-events: none;
-            z-index: 2;
-        }
+.fly{position:fixed;z-index:20;pointer-events:none;font-weight:700;font-size:1.05rem;color:#fff;white-space:nowrap;
+  text-shadow:0 0 12px rgba(255,150,180,.95),0 2px 4px rgba(0,0,0,.4);animation:up 2.4s ease-out forwards;transform:translate(-50%,-50%)}
+@keyframes up{to{transform:translate(-50%,-190px);opacity:0}}
+.petal{position:fixed;z-index:15;pointer-events:none;font-size:1.4rem;animation:sc 1.3s ease-out forwards}
+@keyframes sc{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+.finale{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;
+  background:rgba(37,16,63,.88);text-align:center;padding:24px;animation:fi .8s ease}
+.finale.on{display:flex}
+@keyframes fi{from{opacity:0}}
+.finale h2{font-family:'Kolker Brush',cursive;font-size:clamp(2.6rem,9.5vw,4.8rem);color:var(--gold)}
+.finale p{font-size:1.2rem;max-width:520px;line-height:1.7;color:var(--muted)}
+.finale button{margin-top:10px;padding:10px 26px;border-radius:30px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;font:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<main>
+  <div class="badge">20 • 11</div>
+  <h1>Chúc Mừng Ngày Nhà Giáo Việt Nam</h1>
+  <div class="teacher">Gửi cô Trần Ngọc Hồng Anh</div>
+  <p class="hint" id="hint">Chạm vào hộp quà để mở lời chúc nhé 💝</p>
+  <button class="gift" id="gift" aria-label="Mở hộp quà">🎁</button>
+  <div class="wish" id="wish"></div>
+  <div class="dots" id="dots"></div>
+  <div class="count" id="count"></div>
+</main>
 
-        @keyframes fireworkBurst {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
-        }
+<div class="finale" id="finale">
+  <h2>Gửi cô Trần Ngọc Hồng Anh 🌸</h2>
+  <p>Cảm ơn cô đã luôn kiên nhẫn, tận tâm và dìu dắt chúng em trưởng thành. Chúc cô thật nhiều sức khỏe, niềm vui và hạnh phúc!</p>
+  <button id="again">Mở lại từ đầu</button>
+</div>
 
-        /* ===== PARTICLES / SAO LẤNG ===== */
-        .stars {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+<script>
+const wishes = [
+  "Chúc cô kiếm nhiều tiền mua máy tính mới",
+  "Chúc cô thành công trong sự nghiệp",
+  "Chúc cô đẹp như hoa “anh” đào",
+  "Chúng em cảm ơn cô vì những bài học tâm đắc",
+  "Tụi em mong cô luôn giữ vững niềm đam mê trong công việc",
+  "Tụi em mong cô cho chúng em đổi chỗ tiếp :DDD"
+];
+const emojis = ["🌸","💖","✨","🌷","⭐","🌺","💐"];
+const N = wishes.length;
+let opened = 0, order = [...wishes.keys()];
 
-        .star {
-            position: absolute;
-            width: 3px; height: 3px;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite alternate;
-        }
+const $ = id => document.getElementById(id);
+const gift=$('gift'), wishBox=$('wish'), dots=$('dots'), count=$('count'), hint=$('hint'), finale=$('finale');
 
-        @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.3); }
-        }
+// sao
+for(let i=0;i<70;i++){
+  const s=document.createElement('div');s.className='star';
+  s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+  s.style.animationDelay=Math.random()*3+'s';$('stars').appendChild(s);
+}
+for(let i=0;i<N;i++){dots.appendChild(document.createElement('i'))}
 
-        /* ===== NỘI DUNG CHÍNH ===== */
-        .main-content {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            text-align: center;
-        }
+function burst(x,y,n=12){
+  for(let i=0;i<n;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    const a=Math.random()*Math.PI*2, d=60+Math.random()*110;
+    p.style.left=x+'px';p.style.top=y+'px';
+    p.style.setProperty('--dx',Math.cos(a)*d+'px');
+    p.style.setProperty('--dy',Math.sin(a)*d+'px');
+    p.style.setProperty('--r',(Math.random()*360-180)+'deg');
+    document.body.appendChild(p);setTimeout(()=>p.remove(),1300);
+  }
+}
+function fly(x,y,text){
+  const f=document.createElement('div');f.className='fly';f.textContent=text;
+  f.style.left=Math.min(Math.max(x,120),innerWidth-120)+'px';f.style.top=y+'px';
+  document.body.appendChild(f);setTimeout(()=>f.remove(),2400);
+}
+function openWish(){
+  const text = wishes[order[opened % N]];
+  wishBox.classList.remove('show');
+  setTimeout(()=>{wishBox.textContent=text;wishBox.classList.add('show')},150);
+  if(opened<N) dots.children[opened].classList.add('on');
+  opened++;
+  count.textContent = `Đã mở ${Math.min(opened,N)}/${N} lời chúc`;
+  hint.textContent = opened<N ? "Chạm tiếp để mở thêm nhé… còn nhiều bất ngờ lắm 🎀" : "";
+  gift.textContent = "💝";
+  gift.classList.remove('open');void gift.offsetWidth;gift.classList.add('open');
+  if(opened===N){setTimeout(()=>{finale.classList.add('on');for(let i=0;i<6;i++)setTimeout(()=>burst(Math.random()*innerWidth,Math.random()*innerHeight*.7,14),i*250)},1400)}
+}
 
-        .banner {
-            animation: fadeInDown 1.5s ease-out;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .date-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24, #f0932b);
-            padding: 12px 40px;
-            border-radius: 50px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 12px 48px rgba(255, 107, 107, 0.6); }
-        }
-
-        .title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            background: linear-gradient(90deg, #f7d794, #f8c291, #e77f67, #f7d794);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s ease-in-out infinite, fadeInDown 2s ease-out;
-            text-shadow: none;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .teacher-name {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.6rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 24px rgba(255, 183, 201, 0.9), 0 2px 6px rgba(0,0,0,0.25);
-            margin-bottom: 12px;
-            animation: fadeInDown 2.2s ease-out;
-        }
-
-        .subtitle {
-            font-size: 1.6rem;
-            color: #dfe6e9;
-            font-weight: 300;
-            margin-bottom: 40px;
-            animation: fadeInDown 2.5s ease-out;
-            font-style: italic;
-        }
-
-        /* ===== CARD TRI ÂN ===== */
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            max-width: 1000px;
-            margin: 30px auto;
-        }
-
-        .card {
-            background: rgba(60, 10, 50, 0.35);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 30px 25px;
-            width: 280px;
-            transition: all 0.4s ease;
-            animation: fadeInUp 1s ease-out;
-            animation-fill-mode: backwards;
-        }
-
-        .card:nth-child(1) { animation-delay: 0.3s; }
-        .card:nth-child(2) { animation-delay: 0.6s; }
-        .card:nth-child(3)
+gift.addEventListener('click',e=>{
+  e.stopPropagation();
+  const r=gift.getBoundingClientRect();
+  burst(r.left+r.width/2,r.top+r.height/2,16);
+  openWish();
+});
+// chạm bất kỳ đâu
+document.body.addEventListener('click',e=>{
+  if(finale.classList.contains('on'))return;
+  burst(e.clientX,e.clientY,8);
+  fly(e.clientX,e.clientY,wishes[Math.floor(Math.random()*N)]);
+});
+$('again').addEventListener('click',e=>{
+  e.stopPropagation();finale.classList.remove('on');
+  opened=0;
+  [...dots.children].forEach(d=>d.classList.remove('on'));
+  wishBox.classList.remove('show');count.textContent='';gift.textContent='🎁';
+  hint.textContent='Chạm vào hộp quà để mở lời chúc nhé 💝';
+});
+</script>
+</body>
+</html>
