@@ -6,6 +6,7 @@ Chạy file này rồi mở trình duyệt tại http://localhost:2011
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import webbrowser
 import threading
+import os
 
 HTML_PAGE = """<!DOCTYPE html>
 <html lang="vi">
@@ -20,9 +21,10 @@ HTML_PAGE = """<!DOCTYPE html>
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a0a2e, #16213e, #0f3460, #533483);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background:
+                linear-gradient(180deg, rgba(40, 8, 40, 0.35), rgba(40, 8, 40, 0.15) 40%, rgba(40, 8, 40, 0.45)),
+                url('/bg.jpg') center / cover no-repeat fixed;
+            background-color: #c9568a;
             font-family: 'Quicksand', sans-serif;
             overflow-x: hidden;
             color: #fff;
@@ -32,29 +34,6 @@ HTML_PAGE = """<!DOCTYPE html>
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
-        }
-
-        /* ===== HIỆU ỨNG HOA RƠI ===== */
-        .flower-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-        
-        .flower {
-            position: absolute;
-            top: -60px;
-            animation: fall linear infinite;
-            font-size: 24px;
-            opacity: 0.8;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-60px) rotate(0deg); opacity: 0.9; }
-            100% { transform: translateY(110vh) rotate(720deg); opacity: 0.3; }
         }
 
         /* ===== HIỆU ỨNG PHÁO HOA ===== */
@@ -154,6 +133,16 @@ HTML_PAGE = """<!DOCTYPE html>
             100% { background-position: 0% 50%; }
         }
 
+        .teacher-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 24px rgba(255, 183, 201, 0.9), 0 2px 6px rgba(0,0,0,0.25);
+            margin-bottom: 12px;
+            animation: fadeInDown 2.2s ease-out;
+        }
+
         .subtitle {
             font-size: 1.6rem;
             color: #dfe6e9;
@@ -174,8 +163,8 @@ HTML_PAGE = """<!DOCTYPE html>
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
+            background: rgba(60, 10, 50, 0.35);
+            backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             padding: 30px 25px;
@@ -226,8 +215,8 @@ HTML_PAGE = """<!DOCTYPE html>
             max-width: 700px;
             margin: 50px auto;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
+            background: rgba(60, 10, 50, 0.35);
+            backdrop-filter: blur(14px);
             border-radius: 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             animation: fadeInUp 1.5s ease-out 1.2s backwards;
@@ -301,8 +290,16 @@ HTML_PAGE = """<!DOCTYPE html>
             margin-top: 50px;
             padding: 20px;
             font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.75);
             animation: fadeInUp 2.5s ease-out 2s backwards;
+        }
+
+        .footer .from-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #fff;
+            margin-top: 14px;
+            text-shadow: 0 0 20px rgba(255, 183, 201, 0.8);
         }
 
         .footer .emoji-row {
@@ -311,9 +308,49 @@ HTML_PAGE = """<!DOCTYPE html>
             margin-bottom: 10px;
         }
 
+        /* ===== SAKURA RƠI ===== */
+        .sakura-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            top: -20px;
+            background: linear-gradient(135deg, #ffdde8 0%, #ffb7c9 60%, #ff8fab 100%);
+            border-radius: 150% 0 150% 0;
+            box-shadow: 0 0 6px rgba(255, 183, 201, 0.5);
+            will-change: transform;
+            animation: sakuraFall linear forwards;
+        }
+
+        @keyframes sakuraFall {
+            0% {
+                transform: translate3d(0, -10vh, 0) rotate(0deg) rotateX(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.95; }
+            50% {
+                transform: translate3d(var(--drift), 50vh, 0) rotate(180deg) rotateX(180deg);
+            }
+            100% {
+                transform: translate3d(calc(var(--drift) * -0.6), 110vh, 0) rotate(360deg) rotateX(360deg);
+                opacity: 0.5;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sakura-container { display: none; }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .title { font-size: 2.5rem; }
+            .teacher-name { font-size: 1.9rem; }
             .subtitle { font-size: 1.1rem; }
             .card { width: 90%; }
             .poem-section { padding: 25px 20px; }
@@ -374,14 +411,15 @@ HTML_PAGE = """<!DOCTYPE html>
     <!-- Sao lấp lánh -->
     <div class="stars" id="stars"></div>
 
-    <!-- Hoa rơi -->
-    <div class="flower-container" id="flowerContainer"></div>
+    <!-- Sakura rơi -->
+    <div class="sakura-container" id="sakuraContainer"></div>
 
     <!-- Nội dung chính -->
     <div class="main-content">
         <div class="banner">
             <div class="date-badge">📅 20 / 11</div>
             <h1 class="title">Chúc Mừng Ngày<br>Nhà Giáo Việt Nam</h1>
+            <p class="teacher-name">🌸 Cô Trần Ngọc Hồng Anh 🌸</p>
             <p class="subtitle">🌷 Vietnamese Teachers' Day 🌷</p>
         </div>
 
@@ -389,18 +427,18 @@ HTML_PAGE = """<!DOCTYPE html>
         <div class="card-container">
             <div class="card">
                 <span class="card-icon">📚</span>
-                <h3>Tri Ân Thầy Cô</h3>
-                <p>Cảm ơn thầy cô đã dành trọn tâm huyết, đem ánh sáng tri thức soi đường cho bao thế hệ học trò.</p>
+                <h3>Tri Ân Cô Hồng Anh</h3>
+                <p>Em cảm ơn cô đã dành trọn tâm huyết, đem ánh sáng tri thức soi đường cho cả lớp 9A3 chúng em.</p>
             </div>
             <div class="card">
                 <span class="card-icon">🌻</span>
                 <h3>Lời Chúc Tốt Đẹp</h3>
-                <p>Kính chúc quý thầy cô luôn mạnh khỏe, hạnh phúc và thành công trên con đường gieo mầm tri thức.</p>
+                <p>Kính chúc cô Hồng Anh luôn mạnh khỏe, hạnh phúc và thật nhiều niềm vui trên con đường gieo mầm tri thức.</p>
             </div>
             <div class="card">
                 <span class="card-icon">💐</span>
                 <h3>Mãi Ghi Nhớ</h3>
-                <p>Dù đi đâu, về đâu, trong tim mỗi người học trò luôn mang theo hình bóng và những bài học của thầy cô.</p>
+                <p>Dù đi đâu, về đâu, trong tim mỗi học trò 9A3 luôn mang theo hình bóng và những bài học của cô.</p>
             </div>
         </div>
 
@@ -412,7 +450,7 @@ HTML_PAGE = """<!DOCTYPE html>
             <p class="poem-line">Phấn trắng bảng đen, đời không mệt mỏi,</p>
             <p class="poem-line">Gieo hạt yêu thương, gặt mùa thành công.</p>
             <p class="poem-line">&nbsp;</p>
-            <p class="poem-line">Kính dâng thầy cô lòng biết ơn sâu,</p>
+            <p class="poem-line">Kính dâng cô lòng biết ơn sâu,</p>
             <p class="poem-line">Như cánh hoa hồng đượm sắc nhiệm mầu.</p>
             <p class="poem-line">Ngày 20/11 — ngày tri ân đẹp nhất! 🌹</p>
         </div>
@@ -420,13 +458,14 @@ HTML_PAGE = """<!DOCTYPE html>
         <!-- Trái tim -->
         <div class="heart-section">
             <span class="heart" id="heart" onclick="createFireworks(event)">❤️</span>
-            <p class="wish-text">Yêu thương gửi đến Thầy Cô 💕</p>
+            <p class="wish-text">Yêu thương gửi đến Cô Hồng Anh 💕</p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
             <div class="emoji-row">🌸🌺🌻🌷🌹🌼</div>
             <p>✨ Happy Vietnamese Teachers' Day ✨</p>
+            <p class="from-text">From 9A3 with love 💗</p>
         </div>
     </div>
 
@@ -452,25 +491,6 @@ HTML_PAGE = """<!DOCTYPE html>
                 star.style.height = star.style.width;
                 container.appendChild(star);
             }
-        }
-
-        // ===== TẠO HOA RƠI =====
-        function createFlowers() {
-            const container = document.getElementById('flowerContainer');
-            const flowers = ['🌸', '🌺', '🌷', '🌻', '🌹', '🌼', '💮', '🏵️', '✿', '❀'];
-
-            setInterval(() => {
-                const flower = document.createElement('div');
-                flower.className = 'flower';
-                flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-                flower.style.left = Math.random() * 100 + '%';
-                flower.style.fontSize = (16 + Math.random() * 20) + 'px';
-                flower.style.animationDuration = (5 + Math.random() * 8) + 's';
-                flower.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(flower);
-
-                setTimeout(() => flower.remove(), 15000);
-            }, 400);
         }
 
         // ===== HIỆU ỨNG PHÁO HOA KHI CLICK TIM =====
@@ -612,9 +632,41 @@ HTML_PAGE = """<!DOCTYPE html>
             setTimeout(() => sparkle.remove(), 900);
         });
 
+        // ===== TẠO CÁNH HOA SAKURA RƠI =====
+        function createSakura() {
+            const container = document.getElementById('sakuraContainer');
+            const MAX_PETALS = 60;
+
+            function spawnPetal() {
+                if (container.children.length >= MAX_PETALS) return;
+
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+
+                const size = 8 + Math.random() * 14;
+                const duration = 7 + Math.random() * 8;
+                const drift = (Math.random() * 200 - 100) + 'px';
+
+                petal.style.width = size + 'px';
+                petal.style.height = size * 0.8 + 'px';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.opacity = 0.6 + Math.random() * 0.4;
+                petal.style.setProperty('--drift', drift);
+                petal.style.animationDuration = duration + 's';
+                petal.style.filter = 'blur(' + (Math.random() < 0.3 ? 1 : 0) + 'px)';
+
+                container.appendChild(petal);
+                setTimeout(() => petal.remove(), duration * 1000);
+            }
+
+            // Rơi sẵn một ít cánh hoa khi mới mở trang
+            for (let i = 0; i < 15; i++) setTimeout(spawnPetal, i * 150);
+            setInterval(spawnPetal, 250);
+        }
+
         // ===== KHỞI CHẠY =====
         createStars();
-        createFlowers();
+        createSakura();
 
         console.log('🌸 Chúc Mừng Ngày Nhà Giáo Việt Nam 20/11! 🌸');
     </script>
@@ -623,8 +675,23 @@ HTML_PAGE = """<!DOCTYPE html>
 """
 
 
+BG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sakura_bg_4k.jpg")
+
+
 class TeachersDayHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
+        if self.path.startswith("/bg.jpg"):
+            try:
+                with open(BG_PATH, "rb") as f:
+                    data = f.read()
+                self.send_response(200)
+                self.send_header("Content-type", "image/jpeg")
+                self.send_header("Cache-Control", "max-age=86400")
+                self.end_headers()
+                self.wfile.write(data)
+            except FileNotFoundError:
+                self.send_error(404, "Thiếu file sakura_bg_4k.jpg cạnh file .py")
+            return
         self.send_response(200)
         self.send_header("Content-type", "text/html; charset=utf-8")
         self.end_headers()
