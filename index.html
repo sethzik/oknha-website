@@ -81,13 +81,13 @@ h1{font-family:'Kolker Brush',cursive;font-size:clamp(2.4rem,7.5vw,4.4rem);line-
   <div class="wish" id="wish"></div>
   <div class="dots" id="dots"></div>
   <div class="count" id="count"></div>
-  <div class="from">from <a href="https://www.instagram.com/familiaritiness/" target="_blank" rel="noopener" onclick="event.stopPropagation()">fam</a> with love</div>
+  <div class="from">from <a href="https://www.instagram.com/familiaritiness/" target="_blank" rel="noopener" onclick="event.stopPropagation()">fam</a> and <a href="https://www.instagram.com/_.uma3xibua._/" target="_blank" rel="noopener" onclick="event.stopPropagation()">9A3</a> with love</div>
 </main>
 
 <div class="finale" id="finale">
   <h2>Gửi cô Trần Ngọc Hồng Anh 🌸</h2>
   <p>Cảm ơn cô đã luôn kiên nhẫn, tận tâm và dìu dắt chúng em trưởng thành. Chúc cô thật nhiều sức khỏe, niềm vui và hạnh phúc!</p>
-  <div class="from">from <a href="https://www.instagram.com/familiaritiness/" target="_blank" rel="noopener" onclick="event.stopPropagation()">fam</a> with love</div>
+  <div class="from">from <a href="https://www.instagram.com/familiaritiness/" target="_blank" rel="noopener" onclick="event.stopPropagation()">fam</a> and <a href="https://www.instagram.com/_.uma3xibua._/" target="_blank" rel="noopener" onclick="event.stopPropagation()">9A3</a> with love</div>
   <button id="again">Mở lại từ đầu</button>
 </div>
 
@@ -107,7 +107,6 @@ let opened = 0, order = [...wishes.keys()];
 const $ = id => document.getElementById(id);
 const gift=$('gift'), wishBox=$('wish'), dots=$('dots'), count=$('count'), hint=$('hint'), finale=$('finale');
 
-// sao
 for(let i=0;i<70;i++){
   const s=document.createElement('div');s.className='star';
   s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
@@ -151,7 +150,6 @@ gift.addEventListener('click',e=>{
   burst(r.left+r.width/2,r.top+r.height/2,16);
   openWish();
 });
-// chạm bất kỳ đâu
 document.body.addEventListener('click',e=>{
   if(finale.classList.contains('on'))return;
   burst(e.clientX,e.clientY,8);
