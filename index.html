@@ -76,7 +76,7 @@ h1{font-family:'Kolker Brush',cursive;font-size:clamp(2.4rem,7.5vw,4.4rem);line-
   <div class="badge">20 • 11</div>
   <h1>Chúc Mừng Ngày Nhà Giáo Việt Nam</h1>
   <div class="teacher">Gửi cô Trần Ngọc Hồng Anh</div>
-  <p class="hint" id="hint">Chạm vào hộp quà để mở lời chúc nhé 💝</p>
+  <p class="hint" id="hint">Chạm vào hộp quà để mở lời chúc nhé cô 💝</p>
   <button class="gift" id="gift" aria-label="Mở hộp quà">🎁</button>
   <div class="wish" id="wish"></div>
   <div class="dots" id="dots"></div>
@@ -150,6 +150,7 @@ gift.addEventListener('click',e=>{
   burst(r.left+r.width/2,r.top+r.height/2,16);
   openWish();
 });
+
 document.body.addEventListener('click',e=>{
   if(finale.classList.contains('on'))return;
   burst(e.clientX,e.clientY,8);
