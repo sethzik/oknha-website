@@ -95,6 +95,7 @@ h1{font-family:'Kolker Brush',cursive;font-size:clamp(2.4rem,7.5vw,4.4rem);line-
 const wishes = [
   "Chúc cô kiếm nhiều tiền mua máy tính mới",
   "Chúc cô thành công trong sự nghiệp",
+  "Chúc cô trẽ mãi tuổi 20 và thành cô trên đường tình",
   "Chúc cô đẹp như hoa “anh” đào",
   "Chúng em cảm ơn cô vì những bài học tâm đắc",
   "Tụi em mong cô luôn giữ vững niềm đam mê trong công việc",
@@ -138,7 +139,7 @@ function openWish(){
   if(opened<N) dots.children[opened].classList.add('on');
   opened++;
   count.textContent = `Đã mở ${Math.min(opened,N)}/${N} lời chúc`;
-  hint.textContent = opened<N ? "Chạm tiếp để mở thêm nhé… còn nhiều bất ngờ lắm 🎀" : "";
+  hint.textContent = opened<N ? "Chạm tiếp để mở thêm nhé cô… còn nhiều bất ngờ lắm 🎀" : "";
   gift.textContent = "💝";
   gift.classList.remove('open');void gift.offsetWidth;gift.classList.add('open');
   if(opened===N){setTimeout(()=>{finale.classList.add('on');for(let i=0;i<6;i++)setTimeout(()=>burst(Math.random()*innerWidth,Math.random()*innerHeight*.7,14),i*250)},1400)}
